@@ -23,7 +23,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UMeshComponent* MeshComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	URadialForceComponent* ForceComp;
 
 	virtual void PostInitializeComponents() override;
