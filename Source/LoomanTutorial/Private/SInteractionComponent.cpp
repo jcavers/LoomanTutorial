@@ -57,7 +57,7 @@ void USInteractionComponent::PrimaryInteract()
 	Shape.SetSphere(Radius);
 	
 	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
-
+	
 	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 	
 	for (FHitResult Hit : Hits)

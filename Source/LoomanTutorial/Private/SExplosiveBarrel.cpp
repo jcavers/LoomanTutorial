@@ -19,6 +19,7 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	ForceComp->SetupAttachment(MeshComp);
 
 	ForceComp->SetAutoActivate(false);
+	
 	ForceComp->Radius = 750.0f;
 	ForceComp->ImpulseStrength = 2500.0f;
 	
@@ -47,6 +48,7 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 
 	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
 	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+	
 }
 
 // Called when the game starts or when spawned
