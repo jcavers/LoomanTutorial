@@ -89,10 +89,31 @@ void ASCharacter::PrimaryAttack()
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
 
-	// Replace GetControlRotation() here with a more accurate rotation
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FVector CameraLocation = CameraComp->GetComponentLocation();
+	FRotator CameraRotation = CameraComp->GetComponentRotation();
+	FVector End = CameraLocation + (CameraRotation.Vector() * 2000);
+	
+	FHitResult Hit;
+	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
 
+	FRotator NewSpawnRotation;
+	
+	if(bBlockingHit)
+	{
+		NewSpawnRotation = (Hit.ImpactPoint - HandLocation).Rotation();
+	}
+	else
+	{
+		NewSpawnRotation = (End - CameraLocation).Rotation();
+	}
+	
+	FTransform SpawnTM = FTransform(NewSpawnRotation, HandLocation);
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
