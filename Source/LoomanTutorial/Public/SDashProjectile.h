@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "SProjectile.h"
-#include "SMagicProjectile.generated.h"
+#include "GameFramework/Actor.h"
+#include "SDashProjectile.generated.h"
 
 UCLASS()
-class LOOMANTUTORIAL_API ASMagicProjectile : public ASProjectile
+class LOOMANTUTORIAL_API ASDashProjectile : public ASProjectile
 {
 	GENERATED_BODY()
 	
 public:	
-
-	ASMagicProjectile();
+	// Sets default values for this actor's properties
+	ASDashProjectile();
 
 protected:
-	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

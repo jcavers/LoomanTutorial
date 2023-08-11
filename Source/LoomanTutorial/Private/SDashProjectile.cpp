@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SMagicProjectile.h"
+#include "SDashProjectile.h"
 
 // Sets default values
-ASMagicProjectile::ASMagicProjectile()
+ASDashProjectile::ASDashProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +12,14 @@ ASMagicProjectile::ASMagicProjectile()
 }
 
 // Called when the game starts or when spawned
-void ASMagicProjectile::BeginPlay()
+void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASMagicProjectile::Tick(float DeltaTime)
+void ASDashProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

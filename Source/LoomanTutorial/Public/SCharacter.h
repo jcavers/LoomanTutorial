@@ -20,15 +20,22 @@ class LOOMANTUTORIAL_API ASCharacter : public ACharacter
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> MagicProjectileClass;
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> BlackHoleProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> DashProjectileClass;
+	
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
+	FTimerHandle TimerHandle_SecondaryAttack;
+	FTimerHandle TimerHandle_Dash;
+	FTimerHandle TimerHandle_DashCast;
 
-
-	
 public:
 	// Sets default values for this character's properties
 	ASCharacter();
@@ -52,12 +59,20 @@ protected:
 
 	void PrimaryAttack();
 	void PrimaryAttack_TimeElapsed();
+
+	void SecondaryAttack();
+	void SecondaryAttack_TimeElapsed();
+
+	void Dash();
+	void Dash_TimeElapsed();
 	
 	void PrimaryInteract();
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	
+
+
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
