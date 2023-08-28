@@ -2,11 +2,11 @@
 
 
 #include "SCharacter.h"
-
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "SInteractionComponent.h"
+#include "SAttributeComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -22,6 +22,8 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
@@ -108,37 +110,40 @@ void ASCharacter::Dash()
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	
-	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-
-	FVector CameraLocation = CameraComp->GetComponentLocation();
-	FRotator CameraRotation = CameraComp->GetComponentRotation();
-	FVector End = CameraLocation + (CameraRotation.Vector() * 2000);
-	
-	FHitResult Hit;
-	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
-
-	FRotator NewSpawnRotation;
-	
-	if(bBlockingHit)
+	if(ensure(MagicProjectileClass))
 	{
-		NewSpawnRotation = (Hit.ImpactPoint - HandLocation).Rotation();
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	
+		FCollisionObjectQueryParams ObjectQueryParams;
+		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+
+		FVector CameraLocation = CameraComp->GetComponentLocation();
+		FRotator CameraRotation = CameraComp->GetComponentRotation();
+		FVector End = CameraLocation + (CameraRotation.Vector() * 2000);
+	
+		FHitResult Hit;
+		bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
+
+		FRotator NewSpawnRotation;
+	
+		if(bBlockingHit)
+		{
+			NewSpawnRotation = (Hit.ImpactPoint - HandLocation).Rotation();
+		}
+		else
+		{
+			NewSpawnRotation = (End - CameraLocation).Rotation();
+		}
+	
+		FTransform SpawnTM = FTransform(NewSpawnRotation, HandLocation);
+	
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+	
+		GetWorld()->SpawnActor<AActor>(MagicProjectileClass, SpawnTM, SpawnParams);
 	}
-	else
-	{
-		NewSpawnRotation = (End - CameraLocation).Rotation();
-	}
-	
-	FTransform SpawnTM = FTransform(NewSpawnRotation, HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(MagicProjectileClass, SpawnTM, SpawnParams);
 }
 
 void ASCharacter::SecondaryAttack_TimeElapsed()

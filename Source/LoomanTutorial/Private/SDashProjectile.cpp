@@ -18,6 +18,7 @@ void ASDashProjectile::BeginPlay()
 	
 }
 
+
 // Called every frame
 void ASDashProjectile::Tick(float DeltaTime)
 {
